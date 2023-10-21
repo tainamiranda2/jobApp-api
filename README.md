@@ -6,6 +6,12 @@ Bem-vindo à API Job App, desenvolvida em CakePHP.
 
 A API Job App é uma aplicação para gerenciar usuários, cargos e vagas de emprego. Ela fornece endpoints para realizar operações CRUD em cada uma dessas entidades.
 
+## Tecnologias Utilizadas
+
+- **CakePHP**: Um framework PHP elegante e cheio de recursos para desenvolvimento rápido e limpo.
+- **MySQL**: Banco de dados relacional utilizado para armazenar dados da aplicação.
+- **Composer**: Gerenciador de dependências para PHP, utilizado para instalar e autoloading de bibliotecas e componentes.
+
 ## Configuração do Ambiente
 
 Certifique-se de ter o ambiente configurado corretamente antes de iniciar a API. Você pode seguir as instruções abaixo:
