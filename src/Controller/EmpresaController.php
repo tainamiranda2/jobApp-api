@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-
+use Cake\ORM\TableRegistry;
 /**
  * Empresa Controller
  *
@@ -17,7 +17,8 @@ class EmpresaController extends AppController
      */
     public function index()
     {
-        $empresa = $this->paginate($this->empresa);
+        $empresaTable = TableRegistry::getTableLocator()->get('Empresa');
+        $empresa = $this->paginate($empresaTable);
        //deixar mensagem
         if($empresa){
          return $this->response
@@ -44,11 +45,26 @@ class EmpresaController extends AppController
      */
     public function view($id = null)
     {
-        $empresa = $this->Empresa->get($id, [
-            'contain' => [],
-        ]);
+        $empresaTable = TableRegistry::getTableLocator()->get('Empresa');
 
-        $this->set(compact('empresa'));
+        $Empresa =$empresaTable
+        ->find('all')
+        ->where(['id'=> $id])
+        ->toArray();
+
+        if($Empresa){
+           return $this->response
+           ->withStatus(200)
+            ->withType('application/json')
+            ->withStringBody(json_encode($Empresa));
+            
+        }else{
+         return  $this->response
+           ->withStatus(404)
+           ->withType('application/json')
+           ->withStringBody(json_encode(['msg'=>'Este Empresa não existe.']));
+
+        }
     }
 
     /**
@@ -58,17 +74,27 @@ class EmpresaController extends AppController
      */
     public function add()
     {
-        $empresa = $this->Empresa->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $empresa = $this->Empresa->patchEntity($empresa, $this->request->getData());
-            if ($this->Empresa->save($empresa)) {
-                $this->Flash->success(__('The empresa has been saved.'));
+        if($this->request->is(['post','ajax','patch'])){
+            $empresaTable = TableRegistry::getTableLocator()->get('Empresa');
 
-                return $this->redirect(['action' => 'index']);
+            $Empresa =$empresaTable->newEntity($this->request->getData());
+            $Empresa =$empresaTable->patchEntity($Empresa, $this->request->getData());
+           
+                if ($this->Empresa->save($Empresa)) {
+                  
+                    return $this->response
+                    
+                     ->withType('application/json')
+                     ->withStatus(200)
+                     ->withStringBody(json_encode(['msg'=>'O Empresa  foi cadastrado com sucesso.']));
+                 
+                }
+                return $this->response
+                ->withStatus(404)
+                 ->withType('application/json')
+                 ->withStringBody(json_encode(['msg'=>'O Empresa não foi cadastrado.']));
+              
             }
-            $this->Flash->error(__('The empresa could not be saved. Please, try again.'));
-        }
-        $this->set(compact('empresa'));
     }
 
     /**
@@ -80,11 +106,13 @@ class EmpresaController extends AppController
      */
     public function edit($id = null)
     {
-        $empresa = $this->Empresa->get($id, [
+        $empresaTable = TableRegistry::getTableLocator()->get('Empresa');
+
+        $empresa =$empresaTable->get($id, [
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $empresa = $this->Empresa->patchEntity($empresa, $this->request->getData());
+            $empresa =$empresaTable->patchEntity($empresa, $this->request->getData());
             if ($this->Empresa->save($empresa)) {
                 $this->Flash->success(__('The empresa has been saved.'));
 
@@ -104,8 +132,10 @@ class EmpresaController extends AppController
      */
     public function delete($id = null)
     {
+        $empresaTable = TableRegistry::getTableLocator()->get('Empresa');
+
         $this->request->allowMethod(['post', 'delete']);
-        $empresa = $this->Empresa->get($id);
+        $empresa =$empresaTable->get($id);
         if ($this->Empresa->delete($empresa)) {
             $this->Flash->success(__('The empresa has been deleted.'));
         } else {

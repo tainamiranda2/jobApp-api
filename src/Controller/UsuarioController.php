@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-
+use Cake\ORM\TableRegistry;
 /**
  * Usuario Controller
  *
@@ -17,7 +17,8 @@ class UsuarioController extends AppController
      */
     public function index()
     {
-        $usuario = $this->paginate($this->usuario);
+           $usuarioTable = TableRegistry::getTableLocator()->get('Usuario');
+        $usuario = $this->paginate($usuarioTable);
         
        //deixar mensagem
        if($usuario){
@@ -45,11 +46,25 @@ class UsuarioController extends AppController
      */
     public function view($id = null)
     {
-        $usuario = $this->Usuario->get($id, [
-            'contain' => [],
-        ]);
+        $usuarioTable = TableRegistry::getTableLocator()->get('Usuario');
+        $Usuario = $usuarioTable
+        ->find('all')
+        ->where(['id'=> $id])
+        ->toArray();
 
-        $this->set(compact('usuario'));
+        if($Usuario){
+           return $this->response
+           ->withStatus(200)
+            ->withType('application/json')
+            ->withStringBody(json_encode($Usuario));
+            
+        }else{
+         return  $this->response
+           ->withStatus(404)
+           ->withType('application/json')
+           ->withStringBody(json_encode(['msg'=>'Este Usuario não existe.']));
+
+        }
     }
 
     /**
@@ -59,18 +74,26 @@ class UsuarioController extends AppController
      */
     public function add()
     {
-        $usuario = $this->Usuario->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $usuario = $this->Usuario->patchEntity($usuario, $this->request->getData());
-            if ($this->Usuario->save($usuario)) {
-                $this->Flash->success(__('The usuario has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
+        if ($this->request->is(['post', 'ajax', 'patch'])) {
+            $usuarioTable = TableRegistry::getTableLocator()->get('Usuario');
+            $usuario = $usuarioTable->newEntity($this->request->getData());
+            $usuario = $usuarioTable->patchEntity($usuario, $this->request->getData());
+    
+            if ($usuarioTable->save($usuario)) {
+                $this->response = $this->response
+                    ->withType('application/json')
+                    ->withStatus(200)
+                    ->withStringBody(json_encode(['msg' => 'O Usuario foi cadastrado com sucesso.']));
+            } else {
+                $this->response = $this->response
+                    ->withStatus(404)
+                    ->withType('application/json')
+                    ->withStringBody(json_encode(['msg' => 'O Usuario não foi cadastrado.']));
             }
-            $this->Flash->error(__('The usuario could not be saved. Please, try again.'));
         }
-        $this->set(compact('usuario'));
-    }
+    
+        return $this->response;
+    }  
 
     /**
      * Edit method
@@ -81,12 +104,13 @@ class UsuarioController extends AppController
      */
     public function edit($id = null)
     {
-        $usuario = $this->Usuario->get($id, [
+        $usuarioTable = TableRegistry::getTableLocator()->get('Usuario');
+        $usuario = $usuarioTable->get($id, [
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $usuario = $this->Usuario->patchEntity($usuario, $this->request->getData());
-            if ($this->Usuario->save($usuario)) {
+            $usuario = $usuarioTable->patchEntity($usuario, $this->request->getData());
+            if ($usuarioTable->save($usuario)) {
                 $this->Flash->success(__('The usuario has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -105,9 +129,10 @@ class UsuarioController extends AppController
      */
     public function delete($id = null)
     {
+        $usuarioTable = TableRegistry::getTableLocator()->get('Usuario');
         $this->request->allowMethod(['post', 'delete']);
-        $usuario = $this->Usuario->get($id);
-        if ($this->Usuario->delete($usuario)) {
+        $usuario = $usuarioTable->get($id);
+        if ($usuarioTable->delete($usuario)) {
             $this->Flash->success(__('The usuario has been deleted.'));
         } else {
             $this->Flash->error(__('The usuario could not be deleted. Please, try again.'));

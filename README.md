@@ -1,53 +1,42 @@
-# CakePHP Application Skeleton
+# API de Job App
 
-![Build Status](https://github.com/cakephp/app/actions/workflows/ci.yml/badge.svg?branch=master)
-[![Total Downloads](https://img.shields.io/packagist/dt/cakephp/app.svg?style=flat-square)](https://packagist.org/packages/cakephp/app)
-[![PHPStan](https://img.shields.io/badge/PHPStan-level%207-brightgreen.svg?style=flat-square)](https://github.com/phpstan/phpstan)
+Bem-vindo à API Job App, desenvolvida em CakePHP.
 
-A skeleton for creating applications with [CakePHP](https://cakephp.org) 4.x.
+## Descrição
 
-The framework source code can be found here: [cakephp/cakephp](https://github.com/cakephp/cakephp).
+A API Job App é uma aplicação para gerenciar usuários, cargos e vagas de emprego. Ela fornece endpoints para realizar operações CRUD em cada uma dessas entidades.
 
-## Installation
+## Configuração do Ambiente
 
-1. Download [Composer](https://getcomposer.org/doc/00-intro.md) or update `composer self-update`.
-2. Run `php composer.phar create-project --prefer-dist cakephp/app [app_name]`.
+Certifique-se de ter o ambiente configurado corretamente antes de iniciar a API. Você pode seguir as instruções abaixo:
 
-If Composer is installed globally, run
+1. **Requisitos:**
+   - PHP 7.2 ou superior
+   - Composer (para gerenciamento de dependências)
+   - MySQL ou outro banco de dados suportado pelo CakePHP
 
-```bash
-composer create-project --prefer-dist cakephp/app
-```
+2. **Instalação:**
+   ```bash
+   composer install
 
-In case you want to use a custom app dir name (e.g. `/myapp/`):
+## Endpoints Disponíveis
+## Usuários
+## GET /usuario: Obter lista de usuários.
+## GET /usuario/{id}: Obter detalhes de um usuário específico.
+## POST /usuario: Adicionar um novo usuário.
+## PUT /usuario/{id}: Atualizar informações de um usuário.
+## DELETE /usuario/{id}: Remover um usuário.
 
-```bash
-composer create-project --prefer-dist cakephp/app myapp
-```
+## Cargos
+## GET /cargo: Obter lista de cargos.
+## GET /cargo/{id}: Obter detalhes de um cargo específico.
+## POST /cargo: Adicionar um novo cargo.
+## PUT /cargo/{id}: Atualizar informações de um cargo.
+## DELETE /cargo/{id}: Remover um cargo.
 
-You can now either use your machine's webserver to view the default home page, or start
-up the built-in webserver with:
-
-```bash
-bin/cake server -p 8765
-```
-
-Then visit `http://localhost:8765` to see the welcome page.
-
-## Update
-
-Since this skeleton is a starting point for your application and various files
-would have been modified as per your needs, there isn't a way to provide
-automated upgrades, so you have to do any updates manually.
-
-## Configuration
-
-Read and edit the environment specific `config/app_local.php` and setup the 
-`'Datasources'` and any other configuration relevant for your application.
-Other environment agnostic settings can be changed in `config/app.php`.
-
-## Layout
-
-The app skeleton uses [Milligram](https://milligram.io/) (v1.3) minimalist CSS
-framework by default. You can, however, replace it with any other library or
-custom styles.
+## Vagas
+## GET /vaga: Obter lista de vagas.
+## GET /vaga/{id}: Obter detalhes de uma vaga específica.
+## POST /vaga: Adicionar uma nova vaga.
+## PUT /vaga/{id}: Atualizar informações de uma vaga.
+## DELETE /vaga/{id}: Remover uma vaga.

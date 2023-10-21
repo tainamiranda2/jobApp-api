@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-
+use Cake\ORM\TableRegistry;
 /**
  * Cargo Controller
  *
@@ -17,7 +17,9 @@ class CargoController extends AppController
      */
     public function index()
     {
-        $cargo = $this->paginate($this->cargo);
+        $cargoTable = TableRegistry::getTableLocator()->get('Cargo');
+
+        $cargo = $this->paginate(  $cargoTable);
         
         //deixar mensagem
         if($cargo){
@@ -45,11 +47,26 @@ class CargoController extends AppController
      */
     public function view($id = null)
     {
-        $cargo = $this->Cargo->get($id, [
-            'contain' => [],
-        ]);
+        $cargoTable = TableRegistry::getTableLocator()->get('Cargo');
 
-        $this->set(compact('cargo'));
+        $Cargo =$cargoTable
+        ->find('all')
+        ->where(['id'=> $id])
+        ->toArray();
+
+        if($Cargo){
+           return $this->response
+           ->withStatus(200)
+            ->withType('application/json')
+            ->withStringBody(json_encode($Cargo));
+            
+        }else{
+         return  $this->response
+           ->withStatus(404)
+           ->withType('application/json')
+           ->withStringBody(json_encode(['msg'=>'Este Cargo não existe.']));
+
+        }
     }
 
     /**
@@ -59,17 +76,28 @@ class CargoController extends AppController
      */
     public function add()
     {
-        $cargo = $this->Cargo->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $cargo = $this->Cargo->patchEntity($cargo, $this->request->getData());
-            if ($this->Cargo->save($cargo)) {
-                $this->Flash->success(__('The cargo has been saved.'));
+        if($this->request->is(['post','ajax','patch'])){
+            $cargoTable = TableRegistry::getTableLocator()->get('Cargo');
 
-                return $this->redirect(['action' => 'index']);
+            $Cargo =$cargoTable->newEntity($this->request->getData());
+            $Cargo =$cargoTable->patchEntity($Cargo, $this->request->getData());
+           
+                if ($this->Cargo->save($Cargo)) {
+                  
+                    return $this->response
+                    
+                     ->withType('application/json')
+                     ->withStatus(200)
+                     ->withStringBody(json_encode(['msg'=>'O Cargo  foi cadastrado com sucesso.']));
+                 
+                }else{
+                return $this->response
+                ->withStatus(404)
+                 ->withType('application/json')
+                 ->withStringBody(json_encode(['msg'=>'O Cargo não foi cadastrado.']));
             }
-            $this->Flash->error(__('The cargo could not be saved. Please, try again.'));
-        }
-        $this->set(compact('cargo'));
+            }
+            return $this->response;
     }
 
     /**
@@ -81,11 +109,13 @@ class CargoController extends AppController
      */
     public function edit($id = null)
     {
-        $cargo = $this->Cargo->get($id, [
+        $cargoTable = TableRegistry::getTableLocator()->get('Cargo');
+
+        $cargo =$cargoTable->get($id, [
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $cargo = $this->Cargo->patchEntity($cargo, $this->request->getData());
+            $cargo =$cargoTable->patchEntity($cargo, $this->request->getData());
             if ($this->Cargo->save($cargo)) {
                 $this->Flash->success(__('The cargo has been saved.'));
 
@@ -105,8 +135,10 @@ class CargoController extends AppController
      */
     public function delete($id = null)
     {
+        $cargoTable = TableRegistry::getTableLocator()->get('Cargo');
+
         $this->request->allowMethod(['post', 'delete']);
-        $cargo = $this->Cargo->get($id);
+        $cargo =$cargoTable->get($id);
         if ($this->Cargo->delete($cargo)) {
             $this->Flash->success(__('The cargo has been deleted.'));
         } else {

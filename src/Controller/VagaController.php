@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-
+use Cake\ORM\TableRegistry;
 /**
  * Vaga Controller
  *
@@ -17,7 +17,9 @@ class VagaController extends AppController
      */
     public function index()
     {
-        $vaga = $this->paginate($this->Vaga);
+        
+        $vagaTable = TableRegistry::getTableLocator()->get('Vaga');
+        $vaga = $this->paginate($vagaTable);
 
       //deixar mensagem
       if($vaga){
@@ -45,11 +47,26 @@ class VagaController extends AppController
      */
     public function view($id = null)
     {
-        $vaga = $this->Vaga->get($id, [
-            'contain' => [],
-        ]);
+        $vagaTable = TableRegistry::getTableLocator()->get('Vaga');
 
-        $this->set(compact('vaga'));
+        $Vaga =$vagaTable
+        ->find('all')
+        ->where(['id'=> $id])
+        ->toArray();
+
+        if($Vaga){
+           return $this->response
+           ->withStatus(200)
+            ->withType('application/json')
+            ->withStringBody(json_encode($Vaga));
+            
+        }else{
+         return  $this->response
+           ->withStatus(404)
+           ->withType('application/json')
+           ->withStringBody(json_encode(['msg'=>'Este Vaga não existe.']));
+
+        }
     }
 
     /**
@@ -57,20 +74,33 @@ class VagaController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add()
-    {
-        $vaga = $this->Vaga->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $vaga = $this->Vaga->patchEntity($vaga, $this->request->getData());
-            if ($this->Vaga->save($vaga)) {
-                $this->Flash->success(__('The vaga has been saved.'));
+/**
+ * Add method
+ *
+ * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+ */
+public function add()
+{
+    if ($this->request->is(['post', 'ajax', 'patch'])) {
+        $vagaTable = TableRegistry::getTableLocator()->get('Vaga');
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The vaga could not be saved. Please, try again.'));
+        $vaga = $vagaTable->newEntity($this->request->getData());
+        $vaga = $vagaTable->patchEntity($vaga, $this->request->getData());
+
+        if ($vagaTable->save($vaga)) {
+            $this->response = $this->response
+                ->withType('application/json')
+                ->withStatus(200)
+                ->withStringBody(json_encode(['msg' => 'A Vaga foi cadastrada com sucesso.']));
+        } else {
+            $this->response = $this->response
+                ->withStatus(404)
+                ->withType('application/json')
+                ->withStringBody(json_encode(['msg' => 'A Vaga não foi cadastrada.']));
         }
-        $this->set(compact('vaga'));
     }
+    return $this->response;
+}
 
     /**
      * Edit method
@@ -81,12 +111,14 @@ class VagaController extends AppController
      */
     public function edit($id = null)
     {
-        $vaga = $this->Vaga->get($id, [
+        $vagaTable = TableRegistry::getTableLocator()->get('Vaga');
+
+        $vaga =$vagaTable->get($id, [
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $vaga = $this->Vaga->patchEntity($vaga, $this->request->getData());
-            if ($this->Vaga->save($vaga)) {
+            $vaga =$vagaTable->patchEntity($vaga, $this->request->getData());
+            if ( $vagaTable->save($vaga)) {
                 $this->Flash->success(__('The vaga has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
@@ -105,9 +137,11 @@ class VagaController extends AppController
      */
     public function delete($id = null)
     {
+        $vagaTable = TableRegistry::getTableLocator()->get('Vaga');
+
         $this->request->allowMethod(['post', 'delete']);
-        $vaga = $this->Vaga->get($id);
-        if ($this->Vaga->delete($vaga)) {
+        $vaga =$vagaTable->get($id);
+        if ( $vagaTable->delete($vaga)) {
             $this->Flash->success(__('The vaga has been deleted.'));
         } else {
             $this->Flash->error(__('The vaga could not be deleted. Please, try again.'));

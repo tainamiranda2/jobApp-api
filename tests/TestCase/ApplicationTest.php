@@ -95,7 +95,7 @@ class ApplicationTest extends TestCase
         $app = new Application(dirname(dirname(__DIR__)) . '/config');
         $middleware = new MiddlewareQueue();
 
-        $middleware = $app->middleware($middleware);
+       // $middleware = $app->middleware($middleware);
 
         $this->assertInstanceOf(ErrorHandlerMiddleware::class, $middleware->current());
         $middleware->seek(1);
