@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "94bb3cb5d2d38ef77e14b401bd791867",
+    "content-hash": "72920a6b23df7ed007092f2b1502d4ff",
     "packages": [
         {
             "name": "cakephp/cakephp",
@@ -352,6 +352,44 @@
                 }
             ],
             "time": "2023-08-30T09:31:38+00:00"
+        },
+        {
+            "name": "kaz29/cakephp-cors-middleware-plugin",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kaz29/cakephp-cors-middleware-plugin.git",
+                "reference": "912189e95ab647aa24690dcec98c83b1424be1a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kaz29/cakephp-cors-middleware-plugin/zipball/912189e95ab647aa24690dcec98c83b1424be1a5",
+                "reference": "912189e95ab647aa24690dcec98c83b1424be1a5",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^4.2.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.0"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "CorsMiddleware\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "CorsMiddleware plugin for CakePHP",
+            "support": {
+                "issues": "https://github.com/kaz29/cakephp-cors-middleware-plugin/issues",
+                "source": "https://github.com/kaz29/cakephp-cors-middleware-plugin/tree/1.0.3"
+            },
+            "time": "2022-03-01T03:02:12+00:00"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -5689,5 +5727,5 @@
         "php": ">=7.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
