@@ -69,6 +69,21 @@ class VagaTable extends Table
             ->scalar('resposta')
             ->maxLength('resposta', 20)
             ->allowEmptyString('resposta');
+            
+        $validator
+        ->scalar('motivo')
+        ->maxLength('motivo', 200)
+        ->allowEmptyString('motivo');
+        
+        $validator
+            ->scalar('status')
+            ->maxLength('status', 200)
+            ->allowEmptyString('status');
+
+            $validator
+            ->scalar('nome')
+            ->maxLength('nome', 200)
+            ->allowEmptyString('nome');
 
         $validator
             ->dateTime('data_final')

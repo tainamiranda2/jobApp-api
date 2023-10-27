@@ -13,6 +13,9 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $data_inicial
  * @property int $empresa_id
  * @property string|null $resposta
+ * @property string|null $status
+ *  @property string|null $nome
+* @property string|null $motivo
  * @property \Cake\I18n\FrozenTime $data_final
  */
 class Vaga extends Entity
@@ -31,6 +34,9 @@ class Vaga extends Entity
         'data_inicial' => true,
         'empresa_id' => true,
         'resposta' => true,
+        'nome' => true,
+        'status' => true,
+        'motivo' => true,
         'data_final' => true,
     ];
 }

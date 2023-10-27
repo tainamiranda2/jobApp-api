@@ -70,6 +70,7 @@ $builder->connect('/empresa',  ['controller' => 'Empresa', 'action' => 'index'])
 
 $builder->connect('/vaga',  ['controller' => 'Vaga', 'action' => 'index']);
  $builder->connect('/vaga/view/id', ['controller' => 'Vaga', 'action' => 'view']);
+ $builder->connect('/vaga/edit/id', ['controller' => 'Vaga', 'action' => 'edit']);
  $builder->connect('/vaga/add', ['controller' => 'Vaga', 'action' => 'add']);
 
 
